@@ -1,0 +1,39 @@
+#humid-chart {
+	width: 100%;
+	height: 500px;
+	font-size: 11px;
+}
+
+#humid-legend {
+  width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: Lato;
+  padding: 0 0 0 0;
+}
+
+#humid-legend > div {
+  float: left;
+  width: 80px;
+  height: 30px;
+  margin: 0 15px 15px 0;
+}
+
+#humid-legend .marker {
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  float: left;
+  margin: 3px 5px 0 0;
+}
+
+#humid-legend .title-bold {
+  color: black;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+#humid-legend .title {
+  color: #555;
+  font-size: 15px;
+}

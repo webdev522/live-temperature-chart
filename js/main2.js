@@ -1,10 +1,10 @@
 // global variables for chart
-var temp_chart;
+var humid_chart;
 var timeout = 5000;
 var colortf = "#22aa22";
 var colorts = ["#aa2222", "#2222aa", "#aa22aa", "#aaaa22"];
 var namets = ["Sensor 1", "Sensor 2", "Sensor 3", "Sensor 4"];
-
+var dataIndex = 0;
 // create legend to add
 function getLegendItem(title, color, bold) {
     var item = document.createElement("div");
@@ -38,8 +38,8 @@ function isOutRange(high, low, value) {
 
 // display chart
 function showChart(chartData) {
-    if (temp_chart == undefined) {
-        temp_chart = AmCharts.makeChart( "temp-chart", {
+    if (humid_chart == undefined) {
+        humid_chart = AmCharts.makeChart( "humid-chart", {
             "type": "serial",
             "theme": "light",
             "dataProvider": chartData,
@@ -143,7 +143,7 @@ function showChart(chartData) {
                     var chart = event.chart;
                     
                     // get legend object
-                    var legend = $("#temp-legend");
+                    var legend = $("#humid-legend");
                     legend.empty();
                     
                     // add fluke legend
@@ -161,17 +161,21 @@ function showChart(chartData) {
             }]
         });
     } else {
-        temp_chart.dataProvider = chartData; 
-        temp_chart.validateData();
+        humid_chart.dataProvider = chartData; 
+        humid_chart.validateData();
     }
     
 }
 
 // get json data(temparature, humidty) from php server
 function getJsonData() {
-    $.ajax({url: "server.php", success: function(result){
+    $.ajax({url: "server.php?idx=" + dataIndex, success: function(result){
+        // console.log(result);
+        
         var chartData = makeChartData(result);
         showChart(chartData);
+
+        dataIndex++;
     }});
 }
 
@@ -195,13 +199,13 @@ function makeChartData(jsonData) {
         var date = new Date(0);
         date.setUTCSeconds(data[i][0]);
         unitData['date'] = getFormatDate(date);
-        unitData['value'] = parseFloat(data[i][3]).toFixed(2);
-        unitData['fromValue'] = (parseFloat(data[i][3]) - 0.5).toFixed(2);
-        unitData['toValue'] = (parseFloat(data[i][3]) + 0.5).toFixed(2);
-        unitData['value1'] = parseFloat(data[i][6]).toFixed(2);
-        unitData['value2'] = parseFloat(data[i][11]).toFixed(2);
-        unitData['value3'] = parseFloat(data[i][16]).toFixed(2);
-        unitData['value4'] = parseFloat(data[i][21]).toFixed(2);
+        unitData['value'] = parseFloat(data[i][4]).toFixed(2);
+        unitData['fromValue'] = (parseFloat(data[i][4]) - 2.0).toFixed(2);
+        unitData['toValue'] = (parseFloat(data[i][4]) + 2.0).toFixed(2);
+        unitData['value1'] = parseFloat(data[i][7]).toFixed(2);
+        unitData['value2'] = parseFloat(data[i][12]).toFixed(2);
+        unitData['value3'] = parseFloat(data[i][17]).toFixed(2);
+        unitData['value4'] = parseFloat(data[i][22]).toFixed(2);
         chartData.push(unitData);
     }
     return chartData;
